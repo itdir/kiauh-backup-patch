@@ -21,9 +21,18 @@ from utils.instance_utils import get_instances
 
 class BackupService:
     def __init__(self):
-        self._backup_root = Path.home().joinpath("kiauh_backups")
+        kiauh_root = self._get_kiauh_root()
+        self._backup_root = kiauh_root.parent / "kiauh_backups"
         self._timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-
+        
+    @staticmethod
+    def _get_kiauh_root() -> Path:
+        this_file = Path(__file__).resolve()
+        for parent in this_file.parents:
+            if (parent / "kiauh.sh").exists() and (parent / "default.kiauh.cfg").exists():
+                return parent
+        return Path.home()
+        
     @property
     def backup_root(self) -> Path:
         return self._backup_root
