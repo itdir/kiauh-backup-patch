@@ -193,23 +193,27 @@ class BackupService:
             # fallback: search for printer data directories in the user's home directory
             Logger.print_info("No Klipper instances found via systemd services.")
             Logger.print_info(
-                "Attempting to find printer data directories in base directory..."
+                "Attempting to find printer data directories ..."
             )
 
             from core.constants import BASE_DIR
 
-            base_dir = BASE_DIR
+            search_dirs = [Path.home()]
+            if BASE_DIR != Path.home():
+                search_dirs.append(BASE_DIR)
+
             printer_data_dirs = []
 
-            for pattern in ["printer_data", "printer_*_data"]:
-                for data_dir in base_dir.glob(pattern):
-                    if data_dir.is_dir():
-                        printer_data_dirs.append(data_dir)
+            for search_dir in search_dirs:
+                for pattern in ["printer_data", "printer_*_data"]:
+                    for data_dir in search_dir.glob(pattern):
+                        if data_dir.is_dir() and data_dir not in printer_data_dirs:
+                            printer_data_dirs.append(data_dir)
 
             if not printer_data_dirs:
                 Logger.print_info("Unable to find directory to backup!")
                 Logger.print_info(
-                    "No printer data directories found in base directory."
+                    "No printer data directories found."
                 )
                 return
 
