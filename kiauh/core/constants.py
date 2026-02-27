@@ -20,6 +20,12 @@ INVALID_CHOICE = "Invalid choice. Please select a valid value."
 # current user
 CURRENT_USER = pwd.getpwuid(os.getuid())[0]
 
+# base directory for all component and extension installations
+# Defaults to the current user's home directory. Override with the
+# KIAUH_BASE_DIR environment variable to support system-wide installs
+# (e.g. /opt/kiauh, /srv/kiauh).
+BASE_DIR = Path(os.environ.get("KIAUH_BASE_DIR", str(Path.home())))
+
 # dirs
 SYSTEMD = Path("/etc/systemd/system")
 NGINX_SITES_AVAILABLE = Path("/etc/nginx/sites-available")

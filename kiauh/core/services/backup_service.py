@@ -27,11 +27,13 @@ class BackupService:
         
     @staticmethod
     def _get_kiauh_root() -> Path:
+        from core.constants import BASE_DIR
+
         this_file = Path(__file__).resolve()
         for parent in this_file.parents:
             if (parent / "kiauh.sh").exists() and (parent / "default.kiauh.cfg").exists():
                 return parent
-        return Path.home()
+        return BASE_DIR
         
     @property
     def backup_root(self) -> Path:
@@ -191,21 +193,23 @@ class BackupService:
             # fallback: search for printer data directories in the user's home directory
             Logger.print_info("No Klipper instances found via systemd services.")
             Logger.print_info(
-                "Attempting to find printer data directories in home directory..."
+                "Attempting to find printer data directories in base directory..."
             )
 
-            home_dir = Path.home()
+            from core.constants import BASE_DIR
+
+            base_dir = BASE_DIR
             printer_data_dirs = []
 
             for pattern in ["printer_data", "printer_*_data"]:
-                for data_dir in home_dir.glob(pattern):
+                for data_dir in base_dir.glob(pattern):
                     if data_dir.is_dir():
                         printer_data_dirs.append(data_dir)
 
             if not printer_data_dirs:
                 Logger.print_info("Unable to find directory to backup!")
                 Logger.print_info(
-                    "No printer data directories found in home directory."
+                    "No printer data directories found in base directory."
                 )
                 return
 

@@ -417,19 +417,21 @@ def download_progress(block_num, block_size, total_size) -> None:
 
 def set_nginx_permissions() -> None:
     """
-    Check if permissions of the users home directory
+    Check if permissions of the base directory
     grant execution rights to group and other and set them if not set.
     Required permissions for NGINX to be able to serve Mainsail/Fluidd.
     This seems to have become necessary with Ubuntu 21+. |
     :return: None
     """
-    cmd = f"ls -ld {Path.home()} | cut -d' ' -f1"
+    from core.constants import BASE_DIR
+
+    cmd = f"ls -ld {BASE_DIR} | cut -d' ' -f1"
     homedir_perm = run(cmd, shell=True, stdout=PIPE, text=True)
     permissions = homedir_perm.stdout
 
     if permissions.count("x") < 3:
         Logger.print_status("Granting NGINX the required permissions ...")
-        run(["chmod", "og+x", Path.home()])
+        run(["chmod", "og+x", BASE_DIR])
         Logger.print_ok("Permissions granted.")
 
 

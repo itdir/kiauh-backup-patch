@@ -23,6 +23,7 @@ from components.moonraker import (
 from components.moonraker.moonraker import Moonraker
 from components.moonraker.utils.sysdeps_parser import SysDepsParser
 from components.webui_client.base_data import BaseWebClient
+from core.constants import BASE_DIR
 from core.logger import Logger
 from core.services.backup_service import BackupService
 from core.submodules.simple_config_parser.src.simple_config_parser.simple_config_parser import (
@@ -182,13 +183,13 @@ def backup_moonraker_db_dir() -> None:
     svc = BackupService()
 
     if not instances:
-        # fallback: search for printer data directories in the user's home directory
+        # fallback: search for printer data directories in the base directory
         Logger.print_info("No Moonraker instances found via systemd services.")
         Logger.print_info(
-            "Attempting to find printer data directories in home directory..."
+            "Attempting to find printer data directories in base directory..."
         )
 
-        home_dir = Path.home()
+        home_dir = BASE_DIR
         printer_data_dirs = []
 
         for pattern in ["printer_data", "printer_*_data"]:
@@ -198,7 +199,7 @@ def backup_moonraker_db_dir() -> None:
 
         if not printer_data_dirs:
             Logger.print_info("Unable to find directory to backup!")
-            Logger.print_info("No printer data directories found in home directory.")
+            Logger.print_info("No printer data directories found in base directory.")
             return
 
         for data_dir in printer_data_dirs:
