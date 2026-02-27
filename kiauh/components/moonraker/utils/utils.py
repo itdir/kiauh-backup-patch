@@ -189,11 +189,11 @@ def backup_moonraker_db_dir() -> None:
             "Attempting to find printer data directories in base directory..."
         )
 
-        home_dir = BASE_DIR
+        base_dir = BASE_DIR
         printer_data_dirs = []
 
         for pattern in ["printer_data", "printer_*_data"]:
-            for data_dir in home_dir.glob(pattern):
+            for data_dir in base_dir.glob(pattern):
                 if data_dir.is_dir():
                     printer_data_dirs.append(data_dir)
 
