@@ -9,10 +9,8 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 import shutil
-import tempfile
 from json import JSONDecodeError
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, run
@@ -323,9 +321,7 @@ def generate_nginx_cfg_from_template(name: str, template_src: Path, **kwargs) ->
     :param template_src: the path to the template file
     :return: None
     """
-    fd, tmp_path = tempfile.mkstemp(suffix=f".{name}.tmp")
-    os.close(fd)
-    tmp = Path(tmp_path)
+    tmp = Path.home().joinpath(f"{name}.tmp")
     shutil.copy(template_src, tmp)
     with open(tmp, "r+") as f:
         content = f.read()

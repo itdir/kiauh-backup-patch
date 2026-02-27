@@ -18,7 +18,6 @@ from subprocess import DEVNULL, PIPE, CalledProcessError, call, check_output, ru
 from typing import List
 from zipfile import ZipFile
 
-from core.constants import BASE_DIR
 from core.decorators import deprecated
 from core.logger import Logger
 
@@ -170,6 +169,6 @@ def get_data_dir(instance_type: type, suffix: str) -> Path:
 
     if suffix != "":
         # this is the new data dir naming scheme introduced in v6.0.0
-        return BASE_DIR.joinpath(f"printer_{suffix}_data")
+        return Path.home().joinpath(f"printer_{suffix}_data")
 
-    return BASE_DIR.joinpath("printer_data")
+    return Path.home().joinpath("printer_data")

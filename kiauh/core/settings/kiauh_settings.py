@@ -41,7 +41,6 @@ class InvalidValueError(Exception):
 @dataclass
 class AppSettings:
     backup_before_update: bool | None = field(default=None)
-    base_dir: str | None = field(default=None)
 
 
 @dataclass
@@ -157,13 +156,6 @@ class KiauhSettings:
             "backup_before_update",
             self.config.getboolean,
             False,
-        )
-        self.kiauh.base_dir = self.__read_from_cfg(
-            "kiauh",
-            "base_dir",
-            self.config.getval,
-            None,
-            True,
         )
 
         # parse Klipper options
@@ -306,13 +298,6 @@ class KiauhSettings:
                 "kiauh",
                 "backup_before_update",
                 str(self.kiauh.backup_before_update),
-            )
-
-        if self.kiauh.base_dir is not None:
-            self.config.set_option(
-                "kiauh",
-                "base_dir",
-                self.kiauh.base_dir,
             )
 
         # Handle repositories
