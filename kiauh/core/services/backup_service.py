@@ -202,12 +202,15 @@ class BackupService:
             if BASE_DIR != Path.home():
                 search_dirs.append(BASE_DIR)
 
-            printer_data_dirs = []
+            printer_data_dirs: List[Path] = []
+            seen: set = set()
 
             for search_dir in search_dirs:
                 for pattern in ["printer_data", "printer_*_data"]:
                     for data_dir in search_dir.glob(pattern):
-                        if data_dir.is_dir() and data_dir not in printer_data_dirs:
+                        resolved = data_dir.resolve()
+                        if data_dir.is_dir() and resolved not in seen:
+                            seen.add(resolved)
                             printer_data_dirs.append(data_dir)
 
             if not printer_data_dirs:

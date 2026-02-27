@@ -423,6 +423,8 @@ def set_nginx_permissions() -> None:
     This seems to have become necessary with Ubuntu 21+. |
     :return: None
     """
+    import shlex
+
     from core.constants import BASE_DIR
 
     dirs_to_check = [Path.home()]
@@ -430,13 +432,13 @@ def set_nginx_permissions() -> None:
         dirs_to_check.append(BASE_DIR)
 
     for check_dir in dirs_to_check:
-        cmd = f"ls -ld {check_dir} | cut -d' ' -f1"
+        cmd = f"ls -ld {shlex.quote(str(check_dir))} | cut -d' ' -f1"
         dir_perm = run(cmd, shell=True, stdout=PIPE, text=True)
         permissions = dir_perm.stdout
 
         if permissions.count("x") < 3:
             Logger.print_status("Granting NGINX the required permissions ...")
-            run(["chmod", "og+x", check_dir])
+            run(["chmod", "og+x", str(check_dir)])
             Logger.print_ok("Permissions granted.")
 
 
