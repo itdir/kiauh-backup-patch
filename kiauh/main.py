@@ -24,6 +24,14 @@ def main() -> None:
     try:
         KiauhSettings()
         ensure_encoding()
+
+        from pathlib import Path
+
+        from core.constants import BASE_DIR
+
+        if BASE_DIR != Path.home():
+            Logger.print_info(f"Using custom base directory: {BASE_DIR}")
+
         MainMenu().run()
     except KeyboardInterrupt:
         Logger.print_ok("\nHappy printing!\n", prefix=False)
