@@ -43,6 +43,9 @@ def _resolve_base_dir() -> Path:
     try:
         # PROJECT_ROOT is two levels up from this file (kiauh/core/constants.py)
         project_root = Path(__file__).resolve().parent.parent.parent
+        # sanity check that we found the right directory
+        if not (project_root / "kiauh.sh").exists():
+            raise FileNotFoundError
         cfg_path = project_root / "kiauh.cfg"
         if not cfg_path.exists():
             cfg_path = project_root / "default.kiauh.cfg"
@@ -55,11 +58,15 @@ def _resolve_base_dir() -> Path:
                         in_kiauh_section = stripped == "[kiauh]"
                         continue
                     if in_kiauh_section and stripped.startswith("base_dir"):
-                        parts = stripped.split(":", 1)
-                        if len(parts) == 2:
-                            val = parts[1].strip()
-                            if val and Path(val).is_absolute():
-                                return Path(val)
+                        # handle both "key: value" and "key = value" formats
+                        for sep in (":", "="):
+                            if sep in stripped:
+                                parts = stripped.split(sep, 1)
+                                if len(parts) == 2:
+                                    val = parts[1].strip()
+                                    if val and Path(val).is_absolute():
+                                        return Path(val)
+                                break
     except Exception:
         pass  # any I/O or parse error → fall through to default
 

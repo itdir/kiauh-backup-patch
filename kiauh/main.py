@@ -8,7 +8,9 @@
 # ======================================================================= #
 import io
 import sys
+from pathlib import Path
 
+from core.constants import BASE_DIR
 from core.logger import Logger
 from core.menus.main_menu import MainMenu
 from core.settings.kiauh_settings import KiauhSettings
@@ -24,10 +26,6 @@ def main() -> None:
     try:
         KiauhSettings()
         ensure_encoding()
-
-        from pathlib import Path
-
-        from core.constants import BASE_DIR
 
         if BASE_DIR != Path.home():
             Logger.print_info(f"Using custom base directory: {BASE_DIR}")
