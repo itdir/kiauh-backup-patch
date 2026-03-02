@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import json
-import shutil
+#import shutil
+from utils.fs_utils import remove_with_sudo
 import urllib.request
 from http.client import HTTPResponse
 from json import JSONDecodeError
@@ -41,7 +42,8 @@ def git_clone_wrapper(
             if not force and not get_confirm(question, default_choice=False):
                 Logger.print_info("Skip cloning of repository ...")
                 return
-            shutil.rmtree(target_dir)
+            #shutil.rmtree(target_dir)
+            remove_with_sudo(target_dir)
 
         git_cmd_clone(repo, target_dir, blobless=True)
 
