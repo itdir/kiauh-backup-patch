@@ -19,6 +19,7 @@ from components.moonraker import (
     MOONRAKER_DIR,
     MOONRAKER_ENV_DIR,
     MOONRAKER_INSTALL_SCRIPT,
+    POLKIT_SCRIPT,
 )
 from components.moonraker.moonraker import Moonraker
 from components.moonraker.utils.sysdeps_parser import SysDepsParser
@@ -73,11 +74,16 @@ def remove_polkit_rules() -> bool:
         Logger.print_warn(log)
         return False
 
+    if not POLKIT_SCRIPT.exists():
+        log = "Cannot remove policykit rules. Polkit script not found."
+        Logger.print_warn(log)
+        return False
+
     try:
-        cmd = [f"{MOONRAKER_DIR}/scripts/set-policykit-rules.sh", "--clear"]
+        cmd = [str(POLKIT_SCRIPT), "--clear"]
         run(cmd, stderr=PIPE, stdout=DEVNULL, check=True)
         return True
-    except CalledProcessError as e:
+    except (CalledProcessError, FileNotFoundError) as e:
         Logger.print_error(f"Error while removing policykit rules: {e}")
         return False
 
