@@ -122,7 +122,7 @@ def run_remove_routines(file: Path) -> bool:
         try:
             Logger.print_info("Trying to remove with sudo ...")
             if remove_with_sudo(file):
-                Logger.print_ok(f"File '{file}' was successfully removed!")
+                #Logger.print_ok(f"File '{file}' was successfully removed!")
                 return True
         except CalledProcessError as e:
             Logger.print_error(f"Error deleting '{file}' with sudo:\n{e}")
